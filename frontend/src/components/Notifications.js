@@ -1,44 +1,32 @@
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
-import api from "../api";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getNotifications } from '../redux/actions/notificationActions';
+import { toast } from 'react-toastify';
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState([]);
+    const dispatch = useDispatch();
+    const notifications = useSelector(state => state.notifications.notifications);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      const { data } = await api.get("/notifications/6123456789abcdef01234567");
-      setNotifications(data);
-    };
+    useEffect(() => {
+        dispatch(getNotifications());
+    }, [dispatch]);
 
-    fetchNotifications();
+    useEffect(() => {
+        notifications.forEach(notification => {
+            toast(notification.message);
+        });
+    }, [notifications]);
 
-    const socket = io("http://localhost:5000");
-    socket.on("notification", (notification) => {
-      toast(notification.message);
-      setNotifications((prev) => [...prev, notification]);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  console.log("Notifications rendered", notifications);
-
-  return (
-    <div>
-      <h1>Notifications</h1>
-      <ul>
-        {notifications.map((notification) => (
-          <li key={notification._id}>{notification.message}</li>
-        ))}
-      </ul>
-      <ToastContainer />
-    </div>
-  );
+    return (
+        <div>
+            <h1>Notifications Page</h1>
+            <ul>
+                {notifications.map(notification => (
+                    <li key={notification._id}>{notification.message}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default Notifications;

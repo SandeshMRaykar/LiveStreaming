@@ -1,10 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './features/userSlice';
-import chatReducer from './features/chatSlice';
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers';  // Import the root reducer
 
-export default configureStore({
-    reducer: {
-        user: userReducer,
-        chat: chatReducer,
-    },
-});
+// Set up Redux DevTools
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+// Create store with middleware
+const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(thunk))
+);
+
+export default store;

@@ -1,19 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const ChatMessage = require('../models/ChatMessage');
+const chatController = require('../controllers/chatController');
 
-router.post('/', async (req, res) => {
-    const { userId, message } = req.body;
-
-    const chatMessage = new ChatMessage({ userId, message });
-    await chatMessage.save();
-
-    res.send(chatMessage);
-});
-
-router.get('/', async (req, res) => {
-    const messages = await ChatMessage.find();
-    res.send(messages);
-});
+router.get('/', chatController.getChatMessages);
+router.post('/', chatController.createChatMessage);
 
 module.exports = router;

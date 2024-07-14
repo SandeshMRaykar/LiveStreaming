@@ -24,7 +24,6 @@ Use Socket.io to send real-time notifications to connected clients.
 Frontend: Implement a notification system using react-toastify to show real-time notifications.
 Fetch and display notifications on the user's dashboard.
 
-
 4. Viewing Live Stream Video
 Streaming Service Integration: Research and integrate a streaming service (e.g., AWS IVS, Twilio, WebRTC).
 Video Player: Implement a video player (e.g., Video.js, ReactPlayer) to display the live stream.
