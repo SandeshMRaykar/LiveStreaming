@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getNotifications } from '../redux/actions/notificationActions';
 import { toast } from 'react-toastify';
 
-const Notifications = () => {
+const Notification = () => {
     const dispatch = useDispatch();
     const notifications = useSelector(state => state.notifications.notifications);
 
@@ -17,16 +17,7 @@ const Notifications = () => {
         });
     }, [notifications]);
 
-    return (
-        <div>
-            <h1>Notifications Page</h1>
-            <ul>
-                {notifications.map(notification => (
-                    <li key={notification._id}>{notification.message}</li>
-                ))}
-            </ul>
-        </div>
-    );
+    return null;
 };
 
-export default Notifications;
+export default Notification;

@@ -1,0 +1,37 @@
+Mern stack task:
+
+
+1. Frontend Development
+User Interface (React.js):
+Design and implement components for the home page, live stream page, notifications, user profile, and chat.
+Set up routing with react-router-dom.
+State Management:
+Implement state management using Redux or Context API.
+API Integration:
+Connect the frontend to the backend using Axios for making API calls.
+
+2. Backend Development
+Database Setup (MongoDB): Set up MongoDB Atlas or a local MongoDB instance.
+Create schemas for users, notifications, videos, and chat messages.
+Server Setup (Express.js): Configure the Express server.
+Implement user authentication using JWT.
+Create API endpoints for user registration, login, video upload, fetching notifications, and chat messages.
+Implement real-time communication with Socket.io for chat and notifications.
+
+3.Implementing Notifications
+Backend: Create an API endpoint to save and retrieve notifications.
+Use Socket.io to send real-time notifications to connected clients.
+Frontend: Implement a notification system using react-toastify to show real-time notifications.
+Fetch and display notifications on the user's dashboard.
+
+4. Viewing Live Stream Video
+Streaming Service Integration: Research and integrate a streaming service (e.g., AWS IVS, Twilio, WebRTC).
+Video Player: Implement a video player (e.g., Video.js, ReactPlayer) to display the live stream.
+Ensure the player can handle live stream URLs and configurations.
+
+5. Implementing Real-time Chat Backend: Create an API endpoint for fetching and posting chat messages.
+Use Socket.io for real-time chat communication.
+Frontend: Implement a chat interface on the live stream page.
+Use Socket.io-client to send and receive messages in real time.
+Display chat messages dynamically as they are received.
+
