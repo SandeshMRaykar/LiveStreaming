@@ -7,10 +7,12 @@ export const register = (formData) => async dispatch => {
             type: 'REGISTER_SUCCESS',
             payload: res.data
         });
+        return { success: true };
     } catch (err) {
         dispatch({
             type: 'AUTH_ERROR'
         });
+        return { success: false };
     }
 };
 
@@ -21,10 +23,12 @@ export const login = (formData) => async dispatch => {
             type: 'LOGIN_SUCCESS',
             payload: res.data
         });
+        return { success: true, firstName: res.data.user.firstName };
     } catch (err) {
         dispatch({
             type: 'AUTH_ERROR'
         });
+        return { success: false };
     }
 };
 

@@ -1,0 +1,14 @@
+.live-stream-link {
+    font-size: 1.25rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.live-stream-link:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.container {
+    margin-top: 20%;
+}

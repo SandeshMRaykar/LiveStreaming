@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, username, email, password } = req.body;
+
     try {
         let user = await User.findOne({ email });
         if (user) {
@@ -11,6 +12,8 @@ exports.register = async (req, res) => {
         }
 
         user = new User({
+            firstName,
+            lastName,
             username,
             email,
             password
@@ -23,8 +26,7 @@ exports.register = async (req, res) => {
 
         const payload = {
             user: {
-                id: user.id,
-                email: user.email
+                id: user.id
             }
         };
 
@@ -45,6 +47,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+
     try {
         let user = await User.findOne({ email });
         if (!user) {
@@ -68,9 +71,19 @@ exports.login = async (req, res) => {
             { expiresIn: 3600 },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token });
+                res.json({ token, user: { firstName: user.firstName, lastName: user.lastName, email: user.email } });
             }
         );
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+exports.getUserDetails = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

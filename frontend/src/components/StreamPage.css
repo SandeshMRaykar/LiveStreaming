@@ -1,0 +1,14 @@
+.container {
+    margin-top: 10%;
+}
+
+#stream {
+    min-height: 300px;
+    border: 2px dashed #ccc;
+    position: relative;
+}
+
+#controls input,
+#controls button {
+    margin-bottom: 10px;
+}

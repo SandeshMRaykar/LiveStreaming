@@ -9,8 +9,12 @@ import Profile from './components/Profile';
 import Chat from './components/Chat';
 import Login from './components/Login';
 import Register from './components/Register';
+import RegisterSuccess from './components/RegisterSuccess';
+import StreamPage from './components/StreamPage';
+import WatchPage from './components/WatchPage';
 import Notification from './components/Notification';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 function App() {
   return (
@@ -45,16 +49,19 @@ function App() {
               </ul>
             </div>
           </nav>
-          <div className="container mt-5 pt-4">
+          <div className="container mt-5 pt-5">
             <Notification />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/live" element={<LiveStream />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/chat" element={<Chat />} />
+              {/* <Route path="/chat" element={<Chat />} /> */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/register-success" element={<RegisterSuccess />} />
+              <Route path="/stream" element={<StreamPage />} />
+              <Route path="/watch" element={<WatchPage />} />
             </Routes>
           </div>
         </div>

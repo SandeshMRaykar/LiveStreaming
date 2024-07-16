@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMessages, newMessage } from '../redux/actions/chatActions';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+// const socket = io('http://localhost:5000');
 
 const Chat = () => {
     const dispatch = useDispatch();
@@ -15,13 +15,13 @@ const Chat = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        socket.on('message', msg => {
-            dispatch(newMessage(msg));
-        });
+        // socket.on('message', msg => {
+        //     dispatch(newMessage(msg));
+        // });
     }, [dispatch]);
 
     const sendMessage = () => {
-        socket.emit('sendMessage', message);
+        // socket.emit('sendMessage', message);
         setMessage('');
     };
 

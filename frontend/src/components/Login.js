@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../redux/actions/authActions';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Auth.css'; // Custom CSS for additional styling
@@ -10,12 +11,19 @@ const Login = () => {
         password: ''
     });
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { email, password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const onSubmit = async e => {
         e.preventDefault();
-        dispatch(login(formData));
+        const result = await dispatch(login(formData));
+        if (result && result.success) {
+            localStorage.setItem('firstName', result.firstName);
+            navigate('/');
+        }
     };
 
     return (
@@ -27,7 +35,7 @@ const Login = () => {
                     <input
                         type="email"
                         name="email"
-                        value={formData.email}
+                        value={email}
                         onChange={onChange}
                         className="form-control"
                         placeholder="Enter email"
@@ -39,7 +47,7 @@ const Login = () => {
                     <input
                         type="password"
                         name="password"
-                        value={formData.password}
+                        value={password}
                         onChange={onChange}
                         className="form-control"
                         placeholder="Enter password"

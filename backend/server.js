@@ -20,6 +20,7 @@ app.use(express.json());
 
 // Define Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/stream', require('./routes/stream'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/chat', require('./routes/chat'));
 
