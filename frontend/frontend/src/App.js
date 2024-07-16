@@ -55,6 +55,7 @@ function App() {
               <Route path="/chat" element={<Chat />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path='/livetoken' element={<LiveToken/>}/>
             </Routes>
           </div>
         </div>
