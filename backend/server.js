@@ -6,7 +6,7 @@ const socketio = require("socket.io");
 const http = require("http");
 const ChatMessage = require("./models/ChatMessage");
 const bodyParser = require("body-parser");
-const liveStream = require('./models/Video')
+const videoRoutes = require("./routes/stream");
 
 const app = express();
 const server = http.createServer(app);
@@ -29,8 +29,7 @@ app.use(cors());
 app.use(express.json());
 
 // Define Routes
-app.use("/api/live", require("./routes/stream"))
-app.use("/api/auth", require("./routes/auth"));
+app.use('/api/stream', require("./routes/stream"));
 app.use("/api/notifications", require("./routes/notifications"));
 app.use("/api/chat", require("./routes/chat"));
 

@@ -1,22 +1,21 @@
-import { getMessages, newMessage } from "../actions/chatActions";
 
 const initialState = {
-  messages: [],
+    messages: []
 };
 
 export default function chatReducer(state = initialState, action) {
-  switch (action.type) {
-    case getMessages:
-      return {
-        ...state,
-        messages: action.payload,
-      };
-    case newMessage:
-      return {
-        ...state,
-        messages: [...state.messages, action.payload],
-      };
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case 'GET_MESSAGES':
+            return {
+                ...state,
+                messages: action.payload
+            };
+        case 'NEW_MESSAGE':
+            return {
+                ...state,
+                messages: [...state.messages, action.payload]
+            };
+        default:
+            return state;
+    }
 }

@@ -1,61 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Video from 'twilio-video';
-import ReactPlayer from 'react-player';
+import React, { useState, useRef } from "react";
+import Video from "twilio-video";
 
-const LiveStream = () => {
-  const [token, setToken] = useState(null);
+const LiveStreaming = () => {
+  const [roomName, setRoomName] = useState("");
+  const [identity, setIdentity] = useState("");
   const [room, setRoom] = useState(null);
-  const [identity, setIdentity] = useState('');
-  const [streamKey, setStreamKey] = useState('');
-  const [playerUrl, setPlayerUrl] = useState('');
+  const videoRef = useRef(null);
 
-  useEffect(() => {
-    // Example logic to fetch the player URL, typically from your backend
-    const fetchPlayerUrl = async () => {
-      // Simulate an API call
-      setPlayerUrl('https://example.com/live-stream-url');
-    };
+  const handleJoinRoom = async () => {
+    if (!roomName || !identity) return;
 
-    fetchPlayerUrl();
-  }, []);
+    const response = await fetch(`/video/token?identity=${identity}`);
+    const data = await response.json();
 
-  const joinRoom = async () => {
-    try {
-      const response = await axios.post('/api/live/token', {
-        identity,
-        room: 'example-room'
-      });
-
-      const token = response.data.token;
-      setToken(token);
-
-      Video.connect(token, { name: 'example-room' })
-        .then(room => {
-          setRoom(room);
-        })
-        .catch(error => {
-          console.error('Error connecting to room:', error);
+    Video.connect(data.token, { name: roomName })
+      .then((room) => {
+        setRoom(room);
+        room.localParticipant.tracks.forEach((publication) => {
+          videoRef.current.appendChild(publication.track.attach());
         });
-    } catch (error) {
-      console.error('Error getting token:', error);
-    }
+        room.on("participantConnected", (participant) => {
+          participant.tracks.forEach((publication) => {
+            if (publication.isSubscribed) {
+              videoRef.current.appendChild(publication.track.attach());
+            }
+            publication.on("subscribed", (track) => {
+              videoRef.current.appendChild(track.attach());
+            });
+          });
+        });
+      })
+      .catch((error) => {
+        console.error("Unable to connect to room", error);
+      });
   };
 
   return (
     <div>
-      <h1>Live Stream Page</h1>
       <input
         type="text"
+        placeholder="Enter room name"
+        value={roomName}
+        onChange={(e) => setRoomName(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Enter your identity"
         value={identity}
         onChange={(e) => setIdentity(e.target.value)}
-        placeholder="Enter your identity"
       />
-      <button onClick={joinRoom}>Join Room</button>
-      {room && <p>Connected to room: {room.name}</p>}
-      <ReactPlayer url={playerUrl} playing controls />
+      <button onClick={handleJoinRoom}>Join Room</button>
+      <div ref={videoRef}></div>
     </div>
   );
 };
 
-export default LiveStream;
+export default LiveStreaming;
