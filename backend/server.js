@@ -6,7 +6,6 @@ const socketio = require("socket.io");
 const http = require("http");
 const ChatMessage = require("./models/ChatMessage");
 const bodyParser = require("body-parser");
-const videoRoutes = require("./routes/stream");
 
 const app = express();
 const server = http.createServer(app);

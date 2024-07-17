@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMessages, newMessage } from "../redux/actions/chatActions";
 import io from "socket.io-client";
-
 const socket = io("http://localhost:5000");
 
 const Chat = () => {

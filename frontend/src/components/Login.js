@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/actions/authActions";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Auth.css"; // Custom CSS for additional styling
-;
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -11,13 +11,14 @@ const Login = () => {
     password: "",
   });
   const dispatch = useDispatch();
-
+ const navigate = useNavigate();
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
     e.preventDefault();
     dispatch(login(formData));
+    navigate('../')
   };
 
   return (

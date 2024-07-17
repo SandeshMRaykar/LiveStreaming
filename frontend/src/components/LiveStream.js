@@ -1,37 +1,37 @@
-import React, { useState, useRef } from "react";
-import Video from "twilio-video";
+import React, { useState, useRef } from 'react';
+import Video from 'twilio-video';
 
 const LiveStreaming = () => {
-  const [roomName, setRoomName] = useState("");
-  const [identity, setIdentity] = useState("");
+  const [roomName, setRoomName] = useState('');
+  const [identity, setIdentity] = useState('');
   const [room, setRoom] = useState(null);
   const videoRef = useRef(null);
 
   const handleJoinRoom = async () => {
     if (!roomName || !identity) return;
 
-    const response = await fetch(`/video/token?identity=${identity}`);
+    const response = await fetch(`/stream/token?identity=${identity}`);
     const data = await response.json();
 
     Video.connect(data.token, { name: roomName })
       .then((room) => {
         setRoom(room);
-        room.localParticipant.tracks.forEach((publication) => {
+        room.localParticipant.tracks.forEach(publication => {
           videoRef.current.appendChild(publication.track.attach());
         });
-        room.on("participantConnected", (participant) => {
-          participant.tracks.forEach((publication) => {
+        room.on('participantConnected', participant => {
+          participant.tracks.forEach(publication => {
             if (publication.isSubscribed) {
               videoRef.current.appendChild(publication.track.attach());
             }
-            publication.on("subscribed", (track) => {
+            publication.on('subscribed', track => {
               videoRef.current.appendChild(track.attach());
             });
           });
         });
       })
-      .catch((error) => {
-        console.error("Unable to connect to room", error);
+      .catch(error => {
+        console.error('Unable to connect to room', error);
       });
   };
 
