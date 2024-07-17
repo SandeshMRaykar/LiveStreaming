@@ -11,7 +11,6 @@ const StreamPage = () => {
     const [streamDetails, setStreamDetails] = useState(null);
 
     useEffect(() => {
-        console.log('Setting up event listener for startOrEndStream');
         const startEndButton = document.getElementById('streamStartEnd');
 
         const handleBeforeUnload = async (event) => {
@@ -24,11 +23,10 @@ const StreamPage = () => {
         window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
-            console.log('Cleaning up event listener for startOrEndStream');
             startEndButton.removeEventListener('click', startOrEndStream);
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [identity, streamName, isStreaming, streamDetails, room]);
 
     const handleIdentityChange = (event) => {
         setIdentity(event.target.value);
@@ -42,14 +40,10 @@ const StreamPage = () => {
         event.preventDefault();
         console.log('Button clicked to start or end stream');
         const startEndButton = document.getElementById('streamStartEnd');
-        const identityInput = document.getElementById('identity');
-        const streamNameInput = document.getElementById('streamName');
 
         if (!isStreaming) {
             startEndButton.innerHTML = 'End Stream';
             startEndButton.disabled = true;
-            identityInput.disabled = true;
-            streamNameInput.disabled = true;
 
             try {
                 await startStream(streamName, identity);
@@ -59,8 +53,6 @@ const StreamPage = () => {
                 alert('Unable to start livestream.');
                 startEndButton.innerHTML = 'Start Stream';
                 startEndButton.disabled = false;
-                identityInput.disabled = false;
-                streamNameInput.disabled = false;
             }
         } else {
             endStream();
@@ -100,11 +92,19 @@ const StreamPage = () => {
         setRoom(videoRoom);
         setIsStreaming(true);
 
+        // Attach local video track
+        const localTrack = await TwilioVideo.createLocalVideoTrack();
+        const videoElement = localTrack.attach();
+        videoElement.style.width = '100%';
+        videoElement.style.height = '100%';
+
+        const stream = document.getElementById('stream');
+        stream.appendChild(videoElement);
+
         const liveNotification = document.createElement('div');
         liveNotification.innerHTML = 'LIVE';
         liveNotification.id = 'liveNotification';
         liveNotification.classList.add('badge', 'badge-danger', 'position-absolute', 'top-0', 'start-0');
-        const stream = document.getElementById('stream');
         stream.insertBefore(liveNotification, stream.firstChild);
     };
 

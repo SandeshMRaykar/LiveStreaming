@@ -5,19 +5,19 @@ const { v4: uuidv4 } = require('uuid');
 
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
-const PlaybackGrant = AccessToken.PlaybackGrant;
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN; // Add auth token if not already included
 const apiKey = process.env.TWILIO_API_KEY_SID;
 const apiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 
-const twilioClient = twilio(apiKey, apiKeySecret, { accountSid: accountSid });
+const twilioClient = twilio(accountSid, authToken); // Ensure correct initialization
 
 /**
- * Start a new livestream with a Video Room, PlayerStreamer, and MediaProcessor
+ * Start a new livestream with a Video Room
  */
 router.post('/start', async (req, res) => {
-    console.log('Received request to start stream:', req.body);
+    console.log('Received request to start stream:', req.body);  // Log each request
     const { streamName } = req.body;
 
     try {
@@ -28,32 +28,10 @@ router.post('/start', async (req, res) => {
         });
         console.log('Room created:', room);
 
-        // Create the PlayerStreamer
-        console.log('Twilio client', twilioClient)
-        console.log('Twilio client media', twilioClient.media)
-        const playerStreamer = await twilioClient.media.playerStreamer.create();
-        console.log('PlayerStreamer created:', playerStreamer);
-
-        // Create the MediaProcessor
-        const mediaProcessor = await twilioClient.media.mediaProcessor.create({
-            extension: 'video-composer-v1',
-            extensionContext: JSON.stringify({
-                identity: 'video-composer-v1',
-                room: {
-                    name: room.sid
-                },
-                outputs: [
-                    playerStreamer.sid
-                ],
-            })
-        });
-        console.log('MediaProcessor created:', mediaProcessor);
-
+        // Return the room details
         return res.status(200).send({
             roomId: room.sid,
-            streamName: streamName,
-            playerStreamerId: playerStreamer.sid,
-            mediaProcessorId: mediaProcessor.sid
+            streamName: streamName
         });
 
     } catch (error) {
@@ -103,5 +81,27 @@ router.post('/end', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+
+/**
+ * Generate a token for the viewer
+ */
+router.post('/viewerToken', (req, res) => {
+    const { identity, room } = req.body;
+
+    const videoGrant = new VideoGrant({ room });
+
+    const token = new AccessToken(
+        accountSid,
+        apiKey,
+        apiKeySecret,
+        { identity }
+    );
+
+    token.addGrant(videoGrant);
+
+    res.json({ token: token.toJwt() });
+});
+
 
 module.exports = router;
